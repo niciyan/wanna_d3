@@ -34,18 +34,18 @@ bar.append("text")
 
 var graph = {
   nodes: [
-    {id: "red", radius: 10},
-    {id: "orange", radius:10},
-    {id: "yellow", radius:10},
-    {id: "green", radius:10},
-    {id: "blue", radius:10},
-    {id: "violet", radius:10},
-    {id: "red", radius: 10},
-    {id: "orange", radius:10},
-    {id: "yellow", radius:10},
-    {id: "green", radius:10},
-    {id: "blue", radius:10},
-    {id: "violet", radius:10}
+    {id: "red", radius: 30},
+    {id: "orange", radius:30},
+    {id: "yellow", radius:30},
+    {id: "green", radius:30},
+    {id: "blue", radius:30},
+    {id: "violet", radius:30},
+    {id: "red", radius: 30},
+    {id: "orange", radius:30},
+    {id: "yellow", radius:30},
+    {id: "green", radius:30},
+    {id: "blue", radius:30},
+    {id: "violet", radius:30}
   ],
   links: [
     {source: "red", target: "yellow"},
@@ -67,15 +67,21 @@ var svg = d3.select("body")
 var link = svg.selectAll(".link"),
 	node = svg.selectAll(".node");
 
+// node.data(graph.nodes)
+// 	.enter()
+// 	.append("text")
+// 	.text(function(d){ return d.id })
 
-var circle = node.data(graph.nodes)
+var element = node.data(graph.nodes)
 	.enter()
-	.append("circle"); 
+	.append("g") 
+	.attr("transform", function(d) { return "translate(" + svgWidth / 2 + ","  + svgHeight / 2 + ")"; });
 
-circle.attr("transform", function(d) { return "translate(" + svgWidth / 2 + ","  + svgHeight / 2 + ")"; })
-	.attr("class", "node")
-	.attr("r", function(d) { return d.radius + 10; })
-	.attr('cx', function(d,i) { return svgWidth / 3 * Math.cos( 2 * Math.PI * i / graph.nodes.length); })
+var circle = element.append('circle');
+
+circle.attr("class", "node")
+	.attr("r", function(d) { return d.radius ; })
+	.attr('cx', 0)
 	.attr("cy", 0)
 	.style("fill", function(d) { return d.id; });
 
@@ -83,6 +89,19 @@ circle.transition()
 	.delay(500)
 	.duration(1000)
 	.ease(d3.easeExp)
-	.attr("r", 10)
 	.attr('cx', function(d,i) { return svgWidth / 3 * Math.cos( 2 * Math.PI * i / graph.nodes.length); })
 	.attr('cy', function(d,i) { return svgWidth / 3 * Math.sin( 2 * Math.PI * i / graph.nodes.length); });
+
+var text = element.append('text');
+
+text.attr('text-anchor', 'middle')
+	.text(function(d){ return d.id; })
+	.attr('x', 0)
+	.attr("y", 0)
+	
+text.transition()
+	.delay(500)
+	.duration(1000)
+	.ease(d3.easeExp)
+	.attr('x', function(d,i) { return svgWidth / 3 * Math.cos( 2 * Math.PI * i / graph.nodes.length); })
+	.attr('y', function(d,i) { return svgWidth / 3 * Math.sin( 2 * Math.PI * i / graph.nodes.length); });
